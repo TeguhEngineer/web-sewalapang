@@ -42,23 +42,54 @@
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
-
-            <a class="btn btn-primary rounded-pill px-3" href="/login">Login / Daftar</a>
+            @auth
+                @if (auth()->user()->role == 'admin')
+                    <a class="btn btn-primary rounded-pill px-3" href="/homeAdmin">Login / Daftar</a>
+                @elseif (auth()->user()->role == 'user')
+                    <a class="btn btn-primary rounded-pill px-3" href="/home">Login / Daftar</a>
+                @endif
+            @else
+                <a class="btn btn-primary rounded-pill px-3" href="/login">Login / Daftar</a>
+            @endauth
         </div>
     </header>
 
     <main class="main">
 
         <!-- Starter Section Section -->
-        <section id="starter-section" class="starter-section section pb-5">
+        <section id="starter-section" class="starter-section section border">
 
             <!-- Section Title -->
-            <div class="container section-title background" data-aos="fade-up" style="height: 300px;">
+            <div class="container section-title background" data-aos="fade-up">
                 <h2>Selamat Datang di Web Penyewaan Lapang</h2>
                 <div class="row justify-content-center">
-                    <div class="col-7">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit ipsa a quod quibusdam
-                            numquam mollitia quaerat totam atque temporibus perspiciatis!</p>
+                    <div class="col-12">
+                        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="wallpaper.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="wallpaper-2.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="wallpaper-3.jpg" class="d-block w-100" alt="...">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button"
+                                data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <p>Website penyewaan lapang olahraga.</p>
                     </div>
                 </div>
             </div><!-- End Section Title -->

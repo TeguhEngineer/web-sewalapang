@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('penyewaans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('detail_id');
             $table->foreignId('user_id');
             $table->foreignId('jenislapang_id');
             $table->foreignId('jadwal_id');
             $table->text('bukti_transaksi')->nullable();
-            $table->enum('status',['aktif','selesai'])->default('aktif');
+            $table->enum('status',['pending','aktif','selesai'])->default('pending');
             $table->timestamps();
         });
     }

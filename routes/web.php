@@ -10,6 +10,7 @@ use App\Http\Controllers\User\JadwalSewaController;
 use App\Http\Controllers\User\KontakController;
 use App\Http\Controllers\User\RiwayatController;
 use App\Http\Controllers\User\SewaController;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -49,8 +50,9 @@ Route::middleware('can:user')->group(function () {
     Route::get('/inputSewa/{id}', [SewaController::class, 'create']);
     Route::post('/inputSewa', [SewaController::class, 'store']);
     Route::get('/jadwalsewa', [JadwalSewaController::class, 'index']);
-    Route::get('/riwayat', [RiwayatController::class, 'index']);
+    Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
     Route::put('/riwayat/{id}', [RiwayatController::class, 'uploadBuktiPembayaran']);
+    Route::delete('/riwayat/{id}', [RiwayatController::class, 'delete']);
     Route::get('/kontak', [KontakController::class, 'index']);
 });
 

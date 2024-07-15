@@ -74,6 +74,25 @@
         });
     </script>
 @endif
+@if (session()->has('batal'))
+    <button id="batal" class="btn btn-primary" hidden></button>
+    <script>
+        window.onload = function() {
+            var button = document.getElementById('batal');
+            button.click();
+            button.style.display = 'none';
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const testToastrButton = document.getElementById('batal');
+            if (testToastrButton) {
+                testToastrButton.addEventListener('click', function() {
+                    toastr.success('Pemesanan lapang berhasil dibatalkan.');
+                });
+            }
+        });
+    </script>
+@endif
 @if (session()->has('sewa'))
     <button id="sewa" class="btn btn-primary" hidden></button>
     <script>

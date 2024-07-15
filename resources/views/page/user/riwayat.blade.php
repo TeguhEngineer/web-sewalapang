@@ -29,6 +29,7 @@
                                     <th scope="col" class="text-center">Lama Sewa</th>
                                     <th scope="col" class="text-center">Bukti Pembayaran</th>
                                     <th scope="col" class="text-center">Status</th>
+                                    <th scope="col" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,32 +38,56 @@
                                         <th class="text-center">{{ $loop->iteration }}</th>
                                         <td class="text-center">{{ $item->jenisLapang->lapang->jenis_sewa }}</td>
                                         <td class="text-center">{{ $item->jenisLapang->jenis_lapang }}</td>
-                                        <td class="text-center">{{ $item->jadwal->kegiatan }}</td>
+                                        <td class="text-center">{{ $item->detailPenyewaan->kegiatan }}</td>
                                         <td class="text-center">
-                                            {{ \Carbon\Carbon::parse($item->jadwal->mulai_sewa)->format('d-m-Y') }}/{{ $item->jadwal->hari }}/{{ $item->jadwal->jam }}
+                                            {{ \Carbon\Carbon::parse($item->detailPenyewaan->mulai_sewa)->format('d-m-Y') }}/{{ $item->detailPenyewaan->hari }}/{{ $item->detailPenyewaan->jam }}
                                         </td>
-                                        <td class="text-center">{{ $item->jadwal->lama_sewa }}</td>
+                                        <td class="text-center">{{ $item->detailPenyewaan->lama_sewa }}</td>
                                         <td class="text-center">
                                             @if ($item->bukti_transaksi == null)
-                                                <form action="/riwayat/{{ $item->id }}" method="POST" enctype="multipart/form-data">
+                                                {{-- <form action="/riwayat/{{ $item->id }}" method="POST"
+                                                    enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="file" name="image" accept="image/*" required>
                                                     <button class="btn btn-primary btn-sm" type="submit">kirim</button>
-                                                </form>
+                                                </form> --}}
+                                                @if ($item->status == 'pending')
+                                                    <p><i>Menunggu Konfirmasi Admin</i></p>
+                                                @elseif ($item->status == 'aktif')
+                                                    <p><i>Silahkan Upload Bukti Pembayaran/DP</i></p>
+                                                @elseif ($item->status == 'selesai')
+                                                    <p><i>Penyewaan Selesai</i></p>
+                                                @endif
                                             @else
-                                                <img src="bukti_transaksi/{{ $item->bukti_transaksi }}" width="100" alt="">
+                                                <img src="bukti_transaksi/{{ $item->bukti_transaksi }}" width="100"
+                                                    alt="">
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if ($item->bukti_transaksi == null)
-                                            <span class="badge rounded-pill text-bg-warning">menunggu pembayaran</span>
+                                            @if ($item->status == 'pending')
+                                                <span class="badge rounded-pill text-bg-warning">menunggu
+                                                    konfirmasi</span>
+                                            @elseif ($item->status == 'aktif' && $item->bukti_transaksi == !null)
+                                                <span class="badge rounded-pill text-bg-success">aktif</span>
+                                            @elseif ($item->status == 'aktif')
+                                                <span class="badge rounded-pill text-bg-info">menunggu pembayaran</span>
                                             @elseif ($item->status == 'selesai')
                                                 <span class="badge rounded-pill text-bg-secondary">selesai</span>
-                                            @elseif ($item->bukti_transaksi == !null)
-                                                <span class="badge rounded-pill text-bg-success">aktif</span>
                                             @endif
                                         </td>
+                                        @if ($item->bukti_transaksi == null)
+                                            <td class="text-center">
+                                                <button class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#pesanan-batal{{ $item->id }}"><i
+                                                        class="bi bi-x-lg"></i></button>
+                                            </td>
+                                        @elseif ($item->bukti_transaksi == !null)
+                                            <td class="text-center">
+                                                <button class="btn btn-success" disabled><i
+                                                        class="bi bi-check-all"></i></button>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @empty
                                     <tr>
@@ -78,6 +103,28 @@
             </div>
 
         </section><!-- /Starter Section Section -->
+
+        <!-- Modal Pesanan Batal -->
+        @foreach ($riwayat as $delete)
+            <div class="modal fade" id="pesanan-batal{{ $item->id }}" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <h4>Anda yakin ingin membatalkan pesanan ini ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
+                            <form action="/riwayat/{{ $item->id }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-primary px-4">Ya</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
 
     </main>
 @endsection

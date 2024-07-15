@@ -18,18 +18,34 @@
             <div class="container" data-aos="fade" data-aos-delay="100">
                 <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
                     @foreach ($dataLapang as $item)
-                        <div class="col">
-                            <div class="card h-100">
-                                <img src="lapang/{{ $item->gambar }}" class="card-img-top" alt="...">
-                                <div class="card-body text-center">
-                                    <button class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#jadwal{{ $item->id }}">Jadwal</button>
-                                    <a href="/inputSewa/{{ $item->id }}" class="btn btn-success px-3" class="btn btn-primary">Input</a>
-                                    <h3 class="mt-2">{{ $item->jenis_sewa }}</h3>
-                                    <p>{{ $item->keterangan }}</p>
+                        @if (in_array($item->id, $id) && $validasi)
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="lapang/{{ $item->gambar }}" class="card-img-top" alt="...">
+                                    <div class="card-body text-center">
+                                        <button class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#jadwal{{ $item->id }}">Jadwal</button>
+                                        <a type="button" class="btn btn-secondary px-3" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal">Input</a>
+                                        <h3 class="mt-2">{{ $item->jenis_sewa }}</h3>
+                                        <p>{{ $item->keterangan }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="lapang/{{ $item->gambar }}" class="card-img-top" alt="...">
+                                    <div class="card-body text-center">
+                                        <button class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#jadwal{{ $item->id }}">Jadwal</button>
+                                        <a href="/inputSewa/{{ $item->id }}" class="btn btn-success px-3">Input</a>
+                                        <h3 class="mt-2">{{ $item->jenis_sewa }}</h3>
+                                        <p>{{ $item->keterangan }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -91,6 +107,24 @@
                 </div>
             </div>
         @endforeach
+
+        <!-- Modal Validasi -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"> 
+                        <h1 class="modal-title fs-5 text-warning" id="exampleModalLabel">Informasi</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Lapang ini tidak bisa disewa karena keterkaitan dengan lapang Futsal, Volly, Basket dan Badminton.</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </main>
 @endsection

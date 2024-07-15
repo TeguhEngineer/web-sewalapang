@@ -40,11 +40,26 @@
 
             <nav id="navmenu" class="navmenu d-flex">
                 <ul>
+                    {{-- @if (request()->routeIs('tiket', 'detail')) --}}
                     <li><a href="/home" class="text-decoration-none">Home</a></li>
                     <li><a href="/sewa" class="text-decoration-none">Sewa</a></li>
                     <li><a href="/jadwalsewa" class="text-decoration-none">Jadwal Sewa</a></li>
                     <li><a href="/riwayat" class="text-decoration-none">Riwayat</a></li>
                     <li><a href="/kontak" class="text-decoration-none">Kontak</a></li>
+                    @php
+                        $upload = \App\Models\Penyewaan::where('user_id', auth()->user()->id)
+                            ->latest()
+                            ->first();
+                    @endphp
+                    @if (request()->routeIs('riwayat'))
+                        @if ($upload)
+                            @if ($upload->status == 'pending' || $upload->status == 'aktif')
+                                <button class="btn btn-outline-warning" data-bs-toggle="modal"
+                                    data-bs-target="#upload">Upload
+                                    Bukti Pembayaran</button>
+                            @endif
+                        @endif
+                    @endif
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
@@ -59,6 +74,74 @@
 
         </div>
     </header>
+
+    <!-- Modal Upload -->
+    @if ($upload)
+        @if ($upload->status == 'pending')
+            <div class="modal fade" id="upload" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Upload Bukti Pembayaran</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h3>Menunggu Konfirmasi Admin</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif ($upload->status == 'aktif' && $upload->bukti_transaksi == !null)
+            <div class="modal fade" id="upload" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Upload Bukti Pembayaran</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <h3>Bukti Pembayaran Sudah di Upload</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif ($upload->status == 'aktif')
+            <div class="modal fade" id="upload" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Upload Bukti Pembayaran</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <form action="/riwayat/{{ $upload->id }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-body">
+                                <input type="file" name="image" accept="image/*" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Kirim</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endif
 
     @yield('content')
 

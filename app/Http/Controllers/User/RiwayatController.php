@@ -13,6 +13,7 @@ class RiwayatController extends Controller
         $riwayat = Penyewaan::where('user_id', auth()->user()->id);
         return view('page.user.riwayat', [
             'riwayat' => $riwayat->get(),
+            // 'batal' => $riwayat->first(),
         ]);
     }
 
@@ -34,5 +35,11 @@ class RiwayatController extends Controller
             ]);
         }
         return back()->with('upload', '');
+    }
+
+    public function delete(string $id) {
+        // dd(request()->all());
+        Penyewaan::find($id)->delete();
+        return back()->with('batal', '');
     }
 }

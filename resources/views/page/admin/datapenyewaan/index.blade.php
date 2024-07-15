@@ -49,12 +49,12 @@
                                     <td class="text-center">{{ $item->user->username }}</td>
                                     <td class="text-center">{{ $item->jenisLapang->lapang->jenis_sewa }}</td>
                                     <td class="text-center">{{ $item->jenisLapang->jenis_lapang }}</td>
-                                    <td class="text-center">{{ $item->jadwal->kegiatan }}</td>
+                                    <td class="text-center">{{ $item->detailPenyewaan->kegiatan }}</td>
                                     <td class="text-center">
-                                        {{ \Carbon\Carbon::parse($item->jadwal->mulai_sewa)->format('d-m-Y') }}/{{ $item->jadwal->hari }}/{{ $item->jadwal->jam }}
+                                        {{ \Carbon\Carbon::parse($item->detailPenyewaan->mulai_sewa)->format('d-m-Y') }}/{{ $item->detailPenyewaan->hari }}/{{ $item->detailPenyewaan->jam }}
                                     </td>
-                                    <td class="text-center">{{ $item->jadwal->status }}</td>
-                                    <td class="text-center">{{ $item->jadwal->lama_sewa }}</td>
+                                    <td class="text-center">{{ $item->detailPenyewaan->status }}</td>
+                                    <td class="text-center">{{ $item->detailPenyewaan->lama_sewa }}</td>
                                     <td class="text-center">
                                         @if ($item->bukti_transaksi == null)
                                             <b class="text-danger"><i>*Belum mengirim bukti pembayaran</i></b>
@@ -66,12 +66,18 @@
                                     <td class="text-center">
                                         @if ($item->status == 'aktif')
                                             <span class="badge rounded-pill text-bg-success">aktif</span>
+                                        @elseif ($item->status == 'pending')
+                                            <span class="badge rounded-pill text-bg-warning">pending</span>
                                         @elseif ($item->status == 'selesai')
                                             <span class="badge rounded-pill text-bg-secondary">selesai</span>
                                         @endif
                                     </td>
                                     <td class="text-center d-flex justify-content-center">
-                                        @if ($item->status == 'aktif')
+                                        @if ($item->status == 'pending')
+                                            <button class="btn btn-outline-warning" class="btn btn-primary"
+                                                data-bs-toggle="modal" data-bs-target="#editStatus{{ $item->id }}"><i
+                                                    class="bi bi-pencil-square"></i></button>
+                                        @elseif ($item->status == 'aktif')
                                             <button class="btn btn-outline-warning" class="btn btn-primary"
                                                 data-bs-toggle="modal" data-bs-target="#editStatus{{ $item->id }}"><i
                                                     class="bi bi-pencil-square"></i></button>

@@ -20,12 +20,12 @@ class DataPenyewaanController extends Controller
             $endDate = $request->input('end_date');
 
             // Ambil data penyewaan yang berelasi dengan lapang sesuai dengan rentang tanggal
-            $penyewaan = Penyewaan::whereHas('jadwal', function($query) use ($startDate, $endDate) {
+            $penyewaan = Penyewaan::whereHas('detailPenyewaan', function($query) use ($startDate, $endDate) {
                 $query->whereBetween('mulai_sewa', [$startDate, $endDate]);
             })->get();
         } else {
             // Ambil semua data penyewaan jika tidak ada filter tanggal
-            $penyewaan = Penyewaan::with('jadwal')->get();
+            $penyewaan = Penyewaan::with('detailPenyewaan')->get();
         }
 
         return view('page.admin.datapenyewaan.index', [

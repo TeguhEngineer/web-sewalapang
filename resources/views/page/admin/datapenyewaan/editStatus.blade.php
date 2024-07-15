@@ -23,6 +23,9 @@
                                         @if ($item->status == 'aktif')
                                             <option value="{{ $item->id }}">{{ ucfirst($item->status) }}</option>
                                             <option value="selesai">Selesai</option>
+                                        @elseif ($item->status == 'pending')
+                                            <option value="{{ $item->id }}">{{ ucfirst($item->status) }}</option>
+                                            <option value="aktif">Aktif</option>
                                         @elseif ($item->status == 'selesai')
                                             <option value="{{ $item->id }}">{{ ucfirst($item->status) }}</option>
                                             <option value="aktif">Aktif</option>
